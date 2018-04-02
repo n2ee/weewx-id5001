@@ -57,7 +57,7 @@ def _fmt(x):
 
 class ID5001Driver(weewx.drivers.AbstractDevice):
     """weewx driver that communicates with Heathkit ID-5001 Weather Station
-    
+
     port - serial port
     [Required. Default is /dev/ttyUSB0]
 
