@@ -1,5 +1,7 @@
 weewx-id5001
+
 Copyright 2017 Mark A. Matthews
+
 Distributed under terms of the GPLv3
 
 This is a weewx driver that connects to the venerable Heathkit ID5001 weather
