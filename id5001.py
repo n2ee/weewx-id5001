@@ -17,7 +17,7 @@ Hayes AT modem commands. The serial port is set to 9600 bps, 8 data bits,
 
 """
 
-from __future__ import with_statement
+
 import serial
 import syslog
 import time
@@ -57,7 +57,7 @@ def _fmt(x):
 
 class ID5001Driver(weewx.drivers.AbstractDevice):
     """weewx driver that communicates with Heathkit ID-5001 Weather Station
-
+    
     port - serial port
     [Required. Default is /dev/ttyUSB0]
 
@@ -190,19 +190,19 @@ class Station(object):
             else:
                 break
 
-        return str(bytes(line))
+        return line.decode()
 
     def send_AT_cmd(self, cmd):
         self.serial_port.reset_input_buffer()
-        self.serial_port.write("AT")
-        self.serial_port.write(cmd)
-        self.serial_port.write("\r")
+        self.serial_port.write(str.encode("AT"))
+        self.serial_port.write(str.encode(cmd))
+        self.serial_port.write(str.encode("\r"))
         self.serial_port.flush()
         # print "Sent AT%s\\r" % cmd
 
         response = self._readline()
 
-        # print "Recvd %s\n" % response
+        # print("Recvd %s\n" % response)
 
         return response.strip()
 
@@ -227,13 +227,13 @@ class Station(object):
             sta_time = int(self.send_AT_cmd("RT"))
             sta_date = int(self.send_AT_cmd("RD"))
             # break sta_time into hh:mm:ss
-            hh = sta_time / 10000
-            mm = sta_time / 100 - (hh * 100)
+            hh = sta_time // 10000
+            mm = sta_time // 100 - (hh * 100)
             ss = sta_time - (mm * 100) - (hh * 10000)
 
             # break sta_date into YY:MM:DD
-            YY = sta_date / 10000
-            MM = sta_date / 100 - (YY * 100)
+            YY = sta_date // 10000
+            MM = sta_date // 100 - (YY * 100)
             DD = sta_date - (MM * 100) - (YY * 10000)
 
             # two-digit year hack - this station defaults to a epoch of 1987
@@ -291,9 +291,9 @@ class Station(object):
                 if this_rain != None:
                     rain_delta = this_rain - self.last_rain
                     if rain_delta < 0.0:
-			# Whoops - station must have reset
-			# skip the rain on this loop
-			rain_delta = 0.0
+                        # Whoops - station must have reset
+                        # skip the rain on this loop
+                        rain_delta = 0.0
 
                     self.last_rain = this_rain
                     data['rain'] = rain_delta
@@ -495,7 +495,7 @@ if __name__ == "__main__":
     (options, args) = parser.parse_args()
 
     if options.version:
-        print("id5001 driver version %s" % DRIVER_VERSION)
+        print(("id5001 driver version %s" % DRIVER_VERSION))
         exit(0)
 
     driver_dict = {
